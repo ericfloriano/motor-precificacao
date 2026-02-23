@@ -12,6 +12,9 @@ export default function Auth({ onLogin }) {
         setError('');
 
         try {
+            if (!isLogin && !form.email.toLowerCase().endsWith('@visuri.com.br')) {
+                throw new Error("Cadastro restrito a e-mails corporativos (@visuri.com.br).");
+            }
             const endpoint = isLogin ? '/api/v1/auth/token' : '/api/v1/auth/register';
 
             const payload = isLogin
