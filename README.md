@@ -12,11 +12,6 @@ O projeto foi dividido em duas áreas distintas para maximizar a escalabilidade,
 1. **Frontend**: React.js (com Vite) + Vanilla CSS (Glassmorphism e Neumorphism UI).
 2. **Backend**: Python 3.x (FastAPI) + SQLite local (substituível por PostgreSQL em Supabase/Neon).
 
-## 📚 Documentação Adicional
-
-1. **[Guia de Deploy (Produção)](DEPLOY.md)**: Instruções passo-a-passo para hospedar o Frontend na Vercel e o Backend no Render com banco de dados Supabase totalmente de graça.
-2. **[Documentação de Arquitetura](DOCUMENTATION.md)**: Um guia de estudos detalhando como as peças (React, FastAPI, Sqlalchemy) se encaixam e como um Engenheiro de Software Júnior pode ler este código para evoluir.
-
 ## ✨ Principais Funcionalidades
 
 - **Reatividade Zero-Lag**: Os cálculos matemáticos são pré-validados e formatados visualmente diretamente pelo frontend a cada tecla digitada. Apenas no salvamento ocorre o tráfego HTTP para o Backend, garantindo máxima velocidade na operação comercial.
