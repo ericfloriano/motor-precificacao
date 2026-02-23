@@ -1,0 +1,21 @@
+# Ambientes Vitais
+node_modules/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Documentos Privados de Estudo
+DOCUMENTATION.md
+DEPLOY.md
+
+# Dados Sensíveis e Bancos
+*.db
+sqlite.db
+.env
+.env.local
+.env.*.local
+
+# Builds
+dist/
+build/
