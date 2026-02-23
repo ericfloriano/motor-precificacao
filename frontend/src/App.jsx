@@ -11,7 +11,7 @@ function App() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetch(`http://localhost:8000/api/v1/auth/me`, {
+            fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => {

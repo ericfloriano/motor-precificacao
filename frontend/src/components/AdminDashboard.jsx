@@ -8,7 +8,7 @@ export default function AdminDashboard({ token }) {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:8000/api/v1/admin/users', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error("Erro ao buscar usuários");
@@ -28,7 +28,7 @@ export default function AdminDashboard({ token }) {
     const handleDelete = async (userId) => {
         if (!window.confirm("Certeza que deseja deletar este usuário?")) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/v1/admin/users/${userId}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${userId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -41,7 +41,7 @@ export default function AdminDashboard({ token }) {
 
     const toggleAdminStatus = async (user) => {
         try {
-            const res = await fetch(`http://localhost:8000/api/v1/admin/users/${user.id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/users/${user.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

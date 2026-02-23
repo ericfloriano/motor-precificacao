@@ -10,7 +10,7 @@ export default function HistoryDashboard() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:8000/api/v1/history', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/history`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error("Erro ao buscar histórico");
@@ -30,7 +30,7 @@ export default function HistoryDashboard() {
 
     const handleExport = (id, format) => {
         // format can be 'pdf' or 'excel'
-        window.open(`http://localhost:8000/api/v1/export/${format}/${id}`, '_blank');
+        window.open(`${import.meta.env.VITE_API_URL}/api/v1/export/${format}/${id}`, '_blank');
     };
 
     return (

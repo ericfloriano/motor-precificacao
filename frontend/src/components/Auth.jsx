@@ -18,7 +18,7 @@ export default function Auth({ onLogin }) {
                 ? { email: form.email, password: form.password, full_name: "admin", is_admin: false }
                 : { email: form.email, password: form.password, full_name: form.full_name, is_admin: false };
 
-            const res = await fetch(`http://localhost:8000${endpoint}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -35,7 +35,7 @@ export default function Auth({ onLogin }) {
                 onLogin(data.access_token);
             } else {
                 // Automatically login after register
-                const loginRes = await fetch(`http://localhost:8000/api/v1/auth/token`, {
+                const loginRes = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/token`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: form.email, password: form.password, full_name: "admin", is_admin: false })
