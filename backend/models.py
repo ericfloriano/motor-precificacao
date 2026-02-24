@@ -14,12 +14,17 @@ class User(Base):
     
     pricings = relationship("PricingHistory", back_populates="owner")
 
+import pytz
+
+def get_local_time():
+    return datetime.datetime.now(pytz.timezone('America/Sao_Paulo'))
+
 class PricingHistory(Base):
     __tablename__ = "pricing_history"
 
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=get_local_time)
     
     # Inputs
     data_precificacao = Column(String)
