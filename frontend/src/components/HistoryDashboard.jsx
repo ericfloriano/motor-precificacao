@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { formatCurrency, formatPercent } from '../utils/math';
 
-export default function HistoryDashboard() {
+export default function HistoryDashboard({ isAdmin }) {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -31,6 +31,21 @@ export default function HistoryDashboard() {
     const handleExport = (id, format) => {
         // format can be 'pdf' or 'excel'
         window.open(`${import.meta.env.VITE_API_URL}/api/v1/export/${format}/${id}`, '_blank');
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Certeza que deseja deletar esta cotação?")) return;
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/history/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Erro ao deletar cotação");
+            fetchHistory();
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     return (
@@ -79,6 +94,11 @@ export default function HistoryDashboard() {
                                             <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleExport(item.id, 'excel')}>
                                                 XLSX
                                             </button>
+                                            {isAdmin && (
+                                                <button className="btn" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', backgroundColor: 'transparent', color: 'var(--error)', border: '1px solid var(--error)' }} onClick={() => handleDelete(item.id)}>
+                                                    DEL
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

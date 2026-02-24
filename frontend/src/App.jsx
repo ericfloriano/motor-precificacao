@@ -75,7 +75,7 @@ function App() {
             </nav>
 
             {view === 'pricing' && <PricingForm />}
-            {view === 'history' && <HistoryDashboard />}
+            {view === 'history' && <HistoryDashboard isAdmin={session.user.is_admin} />}
             {view === 'admin' && session.user.is_admin && <AdminDashboard token={session.token} />}
         </div>
     );

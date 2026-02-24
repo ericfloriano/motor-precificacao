@@ -126,6 +126,19 @@ def get_pricing_history(
         
     return results
 
+@app.delete("/api/v1/history/{history_id}")
+def delete_pricing_history(
+    history_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_admin_user)
+):
+    pricing = db.query(models.PricingHistory).filter(models.PricingHistory.id == history_id).first()
+    if not pricing:
+        raise HTTPException(status_code=404, detail="Cotação não encontrada")
+    db.delete(pricing)
+    db.commit()
+    return {"message": "Cotação deletada com sucesso"}
+
 from fastapi.responses import StreamingResponse
 import export
 
