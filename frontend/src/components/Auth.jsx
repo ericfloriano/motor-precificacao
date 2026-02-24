@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function Auth({ onLogin }) {
     const [isLogin, setIsLogin] = useState(true);
-    const [form, setForm] = useState({ email: '', password: '', full_name: '' });
+    const [form, setForm] = useState({ email: '', password: '', full_name: '', invite_code: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ export default function Auth({ onLogin }) {
 
             const payload = isLogin
                 ? { email: form.email, password: form.password, full_name: "admin", is_admin: false }
-                : { email: form.email, password: form.password, full_name: form.full_name, is_admin: false };
+                : { email: form.email, password: form.password, full_name: form.full_name, is_admin: false, invite_code: form.invite_code };
 
             const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
                 method: 'POST',
@@ -84,6 +84,18 @@ export default function Auth({ onLogin }) {
                             required
                         />
                     </div>
+                    {!isLogin && (
+                        <div className="input-group">
+                            <label>Código de Convite Corporativo</label>
+                            <input
+                                type="text"
+                                value={form.invite_code}
+                                onChange={e => setForm({ ...form, invite_code: e.target.value })}
+                                required
+                                placeholder="Fornecido pelo Administrador"
+                            />
+                        </div>
+                    )}
                     <div className="input-group">
                         <label>Senha</label>
                         <input

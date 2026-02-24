@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 import models, schemas, auth, calculos
 from database import engine, get_db
+import os
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,6 +23,11 @@ app.add_middleware(
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if not user.email.lower().endswith("@visuri.com.br"):
         raise HTTPException(status_code=400, detail="Cadastro restrito a e-mails institucionais (@visuri.com.br).")
+    
+    expected_invite = os.getenv("INVITE_CODE", "VISURI2026")
+    if user.invite_code != expected_invite:
+        raise HTTPException(status_code=400, detail="Código de convite inválido ou expirado.")
+
     db_user = auth.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="E-mail já registrado")

@@ -7,6 +7,7 @@ class UserCreate(BaseModel):
     password: str
     full_name: str
     is_admin: bool = False
+    invite_code: Optional[str] = None
 
 class UserUpdate(BaseModel):
     email: str
