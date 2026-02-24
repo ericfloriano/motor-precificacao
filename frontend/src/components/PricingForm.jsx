@@ -177,6 +177,11 @@ export default function PricingForm() {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
+                        <span>Valor de Tabela:</span>
+                        <span>{formatCurrency(form.valor_tabela || 0)}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
                         <span>Valor Unitário da Margem:</span>
                         <span>{formatCurrency(metrics.valor_margem)}</span>
                     </div>

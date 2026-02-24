@@ -103,10 +103,10 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#dbeafe')), # Total
         ('FONTNAME', (1, -4), (1, -1), 'Helvetica-Bold'), # Bold results values
         # Remove border on blank row
-        ('LINEBELOW', (0, 9), (1, 9), 0, colors.white),
-        ('LINEABOVE', (0, 9), (1, 9), 0, colors.white),
-        ('GRID', (0, 9), (-1, 9), 0, colors.white),
-        ('BACKGROUND', (0, 9), (-1, 9), colors.white),
+        ('LINEBELOW', (0, 10), (1, 10), 0, colors.white),
+        ('LINEABOVE', (0, 10), (1, 10), 0, colors.white),
+        ('GRID', (0, 10), (-1, 10), 0, colors.white),
+        ('BACKGROUND', (0, 10), (-1, 10), colors.white),
     ])
     
     table.setStyle(table_style)
