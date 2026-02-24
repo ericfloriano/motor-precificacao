@@ -7,6 +7,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+import models
 
 def export_to_excel(history_data: dict) -> BytesIO:
     df = pd.DataFrame([history_data])
@@ -49,7 +50,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
     elements.append(Paragraph("Resumo de Precificação Web", title_style))
     
     # Metadata
-    gerado_em = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    gerado_em = models.get_local_time().strftime("%d/%m/%Y %H:%M:%S")
     elements.append(Paragraph(f"Gerado por: {author_name} | Em: {gerado_em}", info_style))
     
     # Check Frete
