@@ -47,7 +47,12 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         spaceAfter=20
     )
     
-    elements.append(Paragraph("Resumo de Precificação Web", title_style))
+    nome_cliente = history_data.get('nome_cliente', 'N/A')
+    equipamento = history_data.get('equipamento', 'N/A')
+    protocol_num = history_data.get('protocol_number', 'N/A')
+    pdf_title = f"Resumo de Precificação {nome_cliente} - {equipamento} {protocol_num}"
+    
+    elements.append(Paragraph(pdf_title, title_style))
     
     # Metadata
     gerado_em = models.get_local_time().strftime("%d/%m/%Y %H:%M:%S")

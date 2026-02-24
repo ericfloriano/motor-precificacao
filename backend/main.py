@@ -159,6 +159,7 @@ def delete_pricing_history(
     db.commit()
     return {"message": "Cotação deletada com sucesso"}
 
+import urllib.parse
 from fastapi.responses import StreamingResponse
 import export
 
@@ -177,10 +178,17 @@ def export_pricing_pdf(pricing_id: int, db: Session = Depends(get_db)):
 
     pdf_file = export.export_to_pdf(data_dict, author_name=author_name)
     
+    # Format filename
+    nome = (pricing.nome_cliente or "CLIENTE").upper()
+    equip = (pricing.equipamento or "EQUIP").upper()
+    prot = (pricing.protocol_number or "SN").upper()
+    base_name = f"PRECIFICAÇÃO {nome} - {equip} {prot}.pdf"
+    encoded_name = urllib.parse.quote(base_name)
+    
     return StreamingResponse(
         pdf_file, 
         media_type="application/pdf", 
-        headers={"Content-Disposition": f"attachment; filename=Precificacao_{pricing_id}.pdf"}
+        headers={"Content-Disposition": f"attachment; filename*=utf-8''{encoded_name}"}
     )
 
 @app.get("/api/v1/export/excel/{pricing_id}")
@@ -192,10 +200,17 @@ def export_pricing_excel(pricing_id: int, db: Session = Depends(get_db)):
     data_dict = {k: v for k, v in pricing.__dict__.items() if not k.startswith('_')}
     excel_file = export.export_to_excel(data_dict)
     
+    # Format filename
+    nome = (pricing.nome_cliente or "CLIENTE").upper()
+    equip = (pricing.equipamento or "EQUIP").upper()
+    prot = (pricing.protocol_number or "SN").upper()
+    base_name = f"PRECIFICAÇÃO {nome} - {equip} {prot}.xlsx"
+    encoded_name = urllib.parse.quote(base_name)
+    
     return StreamingResponse(
         excel_file, 
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
-        headers={"Content-Disposition": f"attachment; filename=Precificacao_{pricing_id}.xlsx"}
+        headers={"Content-Disposition": f"attachment; filename*=utf-8''{encoded_name}"}
     )
 
 if __name__ == "__main__":
