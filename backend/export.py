@@ -68,6 +68,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         
     data = [
         ["Data da Precificação", str(history_data.get('data_precificacao', ''))],
+        ["Protocolo", str(history_data.get('protocolo', 'N/A'))],
         ["Cliente", str(history_data.get('nome_cliente', ''))],
         ["Equipamento", str(history_data.get('nome_equipamento', ''))],
         ["Quantidade", str(history_data.get('quantidade', ''))],

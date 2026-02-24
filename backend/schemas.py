@@ -44,6 +44,7 @@ class PricingInput(BaseModel):
 class PricingHistoryOut(PricingInput):
     id: int
     owner_id: int
+    protocolo: str
     created_at: datetime
     valor_margem: float
     valor_comissao: float

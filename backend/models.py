@@ -24,6 +24,7 @@ class PricingHistory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
+    protocolo = Column(String, unique=True, index=True)
     created_at = Column(DateTime, default=get_local_time)
     
     # Inputs

@@ -65,6 +65,7 @@ export default function HistoryDashboard({ isAdmin }) {
                         <thead>
                             <tr style={{ borderBottom: '1px solid var(--surface-border)', color: 'var(--text-secondary)' }}>
                                 <th style={{ padding: '1rem', fontWeight: 500 }}>Data</th>
+                                <th style={{ padding: '1rem', fontWeight: 500 }}>Protocolo</th>
                                 <th style={{ padding: '1rem', fontWeight: 500 }}>Responsável</th>
                                 <th style={{ padding: '1rem', fontWeight: 500 }}>Cliente</th>
                                 <th style={{ padding: '1rem', fontWeight: 500 }}>Equipamento</th>
@@ -75,14 +76,15 @@ export default function HistoryDashboard({ isAdmin }) {
                         <tbody>
                             {history.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                                    <td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
                                         Nenhuma cotação encontrada.
                                     </td>
                                 </tr>
                             ) : (
                                 history.map(item => (
                                     <tr key={item.id} style={{ borderBottom: '1px solid var(--surface-border)' }}>
-                                        <td style={{ padding: '1rem' }}>{new Date(item.created_at).toLocaleDateString()}</td>
+                                        <td style={{ padding: '1rem' }}>{item.data_precificacao}</td>
+                                        <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--accent)' }}>{item.protocolo}</td>
                                         <td style={{ padding: '1rem' }}>{item.owner_name}</td>
                                         <td style={{ padding: '1rem' }}>{item.nome_cliente}</td>
                                         <td style={{ padding: '1rem' }}>{item.nome_equipamento} (x{item.quantidade})</td>

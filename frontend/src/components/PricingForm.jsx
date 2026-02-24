@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { calculatePricing, formatCurrency, formatPercent, DIFAL_TABLE } from '../utils/math';
 
+const getLocalDateString = () => {
+    const d = new Date();
+    return new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+};
+
 const initialForm = {
-    data_precificacao: new Date().toISOString().split('T')[0],
+    data_precificacao: getLocalDateString(),
     nome_cliente: '',
     nome_equipamento: '',
     quantidade: 1,
@@ -71,7 +76,11 @@ export default function PricingForm() {
                 body: JSON.stringify(payload)
             });
             if (!res.ok) throw new Error("Erro na API");
-            setMessage({ type: 'success', text: 'Cotação salva com sucesso!' });
+            const data = await res.json();
+            setMessage({ type: 'success', text: `Cotação salva com sucesso! Protocolo: ${data.data.protocolo}` });
+
+            // Note: intentionally not clearing the form to allow easy re-quotes 
+            // but the success message shows the saved protocol
         } catch (error) {
             console.error(error);
             setMessage({ type: 'error', text: 'Erro ao conectar com servidor' });
