@@ -18,6 +18,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def health_check():
+    return {"status": "Motor de Precificação API Online e Operante"}
+
 # --- AUTH ENDPOINTS ---
 @app.post("/api/v1/auth/register", response_model=schemas.UserOut)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
