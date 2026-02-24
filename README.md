@@ -17,7 +17,7 @@ O projeto foi dividido em duas áreas distintas para maximizar a escalabilidade,
 - **Reatividade Zero-Lag**: Os cálculos matemáticos são pré-validados e formatados visualmente diretamente pelo frontend a cada tecla digitada. Apenas no salvamento ocorre o tráfego HTTP para o Backend, garantindo máxima velocidade na operação comercial.
 - **Protocolamento Automático**: Toda cotação ganha um UUID/Protocolo numérico sequencial instantâneo no formato corporativo rastreável.
 - **Tabela Dinâmica DIFAL**: Lookup customizado por estado configurado e embutido no motor base.
-- **Segurança e Hierarquia (ACL)**: Módulo de gestão de permissões contendo Login Automático, restrição de domínios (@visuri.com.br), controle Anti-Spam via Código de Convite da Firma (`INVITE_CODE`) e visibilidade global com poderes de Exclusão de Histórico exclusivo para Administradores.
+- **Segurança e Hierarquia (ACL)**: Módulo de gestão de permissões contendo Login Automático, restrição de domínios (apenas e-mails autorizados da empresa), controle Anti-Spam via Código de Convite Privado e visibilidade global com poderes de Exclusão de Histórico exclusivo para Administradores.
 - **Exportação Formatada**: Relatórios em `.xlsx` e `.pdf` corporativos e super estéticos (usando ReportLab e Pandas) formatados para envio direto ou upload em CRMs, contendo dados do protocolo, da emissão e de quem a gerou.
 - **UI Responsiva e Premium**: Visual *Dark Mode* que inspira confiança corporativa, com micro-animações, botões texturizados com glassmorphism, *gradient fonts*, e *Night Shadows*.
 
@@ -54,5 +54,5 @@ Os valores base para o DIFAL podem ser ajustados com facilidade editando o objet
 ## 🛡️ Segurança
 
 A persistência em banco está protegida por um schema robusto e higienizado desenvolvido sobre **Pydantic**. 
-Autenticação via JWT já está integrada com expiração controlada e segregação de banco de dados (Apenas admins apagam dados ou veem todos).
-O controle do Cadastro é feito via verificação de domínio atrelado a um cofre de Ambiente (ENV) contendo o `INVITE_CODE` oficial.
+Autenticação via JWT já está integrada com expiração controlada e segregação de permissões de banco de dados (Apenas admins apagam dados ou veem todos).
+O controle do Cadastro é feito via verificação de domínio atrelado a um cofre de Ambiente (ENV) contendo senhas e chaves ocultas.

@@ -21,10 +21,11 @@ app.add_middleware(
 # --- AUTH ENDPOINTS ---
 @app.post("/api/v1/auth/register", response_model=schemas.UserOut)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    if not user.email.lower().endswith("@visuri.com.br"):
-        raise HTTPException(status_code=400, detail="Cadastro restrito a e-mails institucionais (@visuri.com.br).")
+    allowed_domain = os.getenv("ALLOWED_EMAIL_DOMAIN", "@empresa.com.br")
+    if not user.email.lower().endswith(allowed_domain):
+        raise HTTPException(status_code=400, detail=f"Cadastro restrito a e-mails institucionais ({allowed_domain}).")
     
-    expected_invite = os.getenv("INVITE_CODE", "VISURI2026")
+    expected_invite = os.getenv("INVITE_CODE", "DEFAULT_SECRET_KEY")
     if user.invite_code != expected_invite:
         raise HTTPException(status_code=400, detail="Código de convite inválido ou expirado.")
 
