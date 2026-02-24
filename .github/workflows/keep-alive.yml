@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping API
-        run: curl -sSf https://motor-precifica-backend.onrender.com/ || exit 0
+        run: curl -sSf https://motor-precificacao.onrender.com/ || exit 0
