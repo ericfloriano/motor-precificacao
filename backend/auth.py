@@ -10,7 +10,7 @@ from database import get_db
 import models, schemas
 import os
 
-SECRET_KEY = os.getenv("SECRET_KEY", "b3a29f8v1x4z7q9w2e4r5t6y7u")
+SECRET_KEY = os.getenv("SECRET_KEY", "your-super-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 # 1 Day
 
