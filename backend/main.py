@@ -180,8 +180,8 @@ def export_pricing_pdf(pricing_id: int, db: Session = Depends(get_db)):
     
     # Format filename
     nome = (pricing.nome_cliente or "CLIENTE").upper()
-    equip = (pricing.equipamento or "EQUIP").upper()
-    prot = (pricing.protocol_number or "SN").upper()
+    equip = (pricing.nome_equipamento or "EQUIP").upper()
+    prot = (pricing.protocolo or "SN").upper()
     base_name = f"PRECIFICAÇÃO {nome} - {equip} {prot}.pdf"
     encoded_name = urllib.parse.quote(base_name)
     
@@ -202,8 +202,8 @@ def export_pricing_excel(pricing_id: int, db: Session = Depends(get_db)):
     
     # Format filename
     nome = (pricing.nome_cliente or "CLIENTE").upper()
-    equip = (pricing.equipamento or "EQUIP").upper()
-    prot = (pricing.protocol_number or "SN").upper()
+    equip = (pricing.nome_equipamento or "EQUIP").upper()
+    prot = (pricing.protocolo or "SN").upper()
     base_name = f"PRECIFICAÇÃO {nome} - {equip} {prot}.xlsx"
     encoded_name = urllib.parse.quote(base_name)
     
