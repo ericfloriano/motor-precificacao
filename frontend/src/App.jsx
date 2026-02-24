@@ -8,19 +8,21 @@ function App() {
     const [view, setView] = useState('pricing');
     const [session, setSession] = useState(null); // { token, user: { is_admin } }
 
+    const handleLogin = (token) => {
+        fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Token Invalido");
+                return res.json();
+            })
+            .then(user => setSession({ token, user }))
+            .catch(() => handleLogout());
+    };
+
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
-            fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error("Token Invalido");
-                    return res.json();
-                })
-                .then(user => setSession({ token, user }))
-                .catch(() => handleLogout());
-        }
+        if (token) handleLogin(token);
     }, []);
 
     const handleLogout = () => {
@@ -28,8 +30,8 @@ function App() {
         setSession(null);
     };
 
-    if (!session) {
-        return <Auth onLogin={setSession} />;
+    if (!session || !session.user) {
+        return <Auth onLogin={handleLogin} />;
     }
 
     return (
