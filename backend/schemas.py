@@ -41,6 +41,7 @@ class PricingInput(BaseModel):
     frete_tipo: str
     valor_frete: float
     estado_destino: str
+    desconto_concedido_perc: float
 
 class PricingHistoryOut(PricingInput):
     id: int
@@ -52,6 +53,11 @@ class PricingHistoryOut(PricingInput):
     base_calculo: float
     percentual_difal: float
     valor_difal: float
+    valor_com_comissao: float
+    valor_com_margem: float
+    valor_venda_cheio: float
+    valor_minimo_venda: float
+    valor_com_desconto: float
     venda_unitario: float
     venda_total: float
     model_config = ConfigDict(from_attributes=True)

@@ -78,15 +78,21 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         ["Cliente", str(history_data.get('nome_cliente', ''))],
         ["Equipamento", str(history_data.get('nome_equipamento', ''))],
         ["Quantidade", str(history_data.get('quantidade', ''))],
-        ["Valor de Tabela", format_currency(history_data.get('valor_tabela', 0.0))],
-        ["Margem para Negociação", f"{format_percent(history_data.get('margem_negociacao_perc', 0.0))} / {format_currency(history_data.get('valor_margem', 0.0))}"],
+        ["Tabela Base (+ Frete se CIF)", format_currency(
+            history_data.get('valor_tabela', 0.0) + (history_data.get('valor_frete', 0.0) if history_data.get('frete_tipo') == 'CIF' else 0.0)
+        )],
+        ["Frete (Informativo)", frete_str],
         ["Comissão Representante", comissao_str],
-        ["Frete (Modalidade / Valor)", frete_str],
+        ["Subtotal Com Comissão", format_currency(history_data.get('valor_com_comissao', 0.0))],
+        ["Margem Negociação", f"{format_percent(history_data.get('margem_negociacao_perc', 0.0))} / {format_currency(history_data.get('valor_margem', 0.0))}"],
+        ["Subtotal Com Margem (Base Cálculo)", format_currency(history_data.get('valor_com_margem', 0.0))],
         ["Destino", f"{history_data.get('estado_destino', '')} - DIFAL: {format_percent(history_data.get('percentual_difal', 0.0))}"],
-        ["", ""],
-        ["Base de Cálculo", format_currency(history_data.get('base_calculo', 0.0))],
         ["Valor do Imposto (DIFAL)", format_currency(history_data.get('valor_difal', 0.0))],
-        ["Valor Unitário Final", format_currency(history_data.get('venda_unitario', 0.0))],
+        ["VALOR CHEIO DE VENDA", format_currency(history_data.get('valor_venda_cheio', 0.0))],
+        ["Valor Mínimo (Reserva)", format_currency(history_data.get('valor_minimo_venda', 0.0))],
+        ["Desconto Concedido (%)", format_percent(history_data.get('desconto_concedido_perc', 0.0))],
+        ["", ""],
+        ["Valor Unitário Final", format_currency(history_data.get('valor_com_desconto', 0.0))],
         ["Valor Total Final", format_currency(history_data.get('venda_total', 0.0))]
     ]
     

@@ -43,10 +43,18 @@ class PricingHistory(Base):
     # Outputs
     valor_margem = Column(Float)
     valor_comissao = Column(Float)
+    valor_com_comissao = Column(Float)
+    valor_com_margem = Column(Float)
     base_calculo = Column(Float)
     percentual_difal = Column(Float)
     valor_difal = Column(Float)
     venda_unitario = Column(Float)
     venda_total = Column(Float)
+    
+    # Novas regras (Trava & Desconto)
+    valor_venda_cheio = Column(Float)
+    valor_minimo_venda = Column(Float)
+    desconto_concedido_perc = Column(Float, default=0.0)
+    valor_com_desconto = Column(Float)
 
     owner = relationship("User", back_populates="pricings")

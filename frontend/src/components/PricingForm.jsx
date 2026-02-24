@@ -17,7 +17,8 @@ const initialForm = {
     percentual_comissao: '',
     frete_tipo: 'FOB',
     valor_frete: '',
-    estado_destino: 'SP'
+    estado_destino: 'SP',
+    desconto_concedido_perc: ''
 };
 
 export default function PricingForm() {
@@ -52,7 +53,7 @@ export default function PricingForm() {
             const payload = { ...form };
 
             // Ensure precise floats before submitting
-            const numberFields = ['valor_tabela', 'margem_negociacao_perc', 'percentual_comissao', 'valor_frete'];
+            const numberFields = ['valor_tabela', 'margem_negociacao_perc', 'percentual_comissao', 'valor_frete', 'desconto_concedido_perc'];
             numberFields.forEach(field => {
                 if (payload[field] === '') {
                     payload[field] = 0;
@@ -159,13 +160,42 @@ export default function PricingForm() {
                         </select>
                     </div>
 
+                    <div className="input-group" style={{
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
+                        paddingTop: '1rem',
+                        marginTop: '1rem'
+                    }}>
+                        <label>Desconto Concedido na Negociação (%)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="desconto_concedido_perc"
+                            value={form.desconto_concedido_perc}
+                            onChange={handleChange}
+                            placeholder="Ex: 5"
+                            style={{
+                                borderColor: Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc ? '#ef4444' : 'inherit'
+                            }}
+                        />
+                        {Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc && (
+                            <span style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block' }}>
+                                O desconto solicitado ({form.desconto_concedido_perc}%) excede o máximo permitido ({formatPercent(metrics.desconto_maximo_perc)}).
+                            </span>
+                        )}
+                    </div>
+
                     {message && (
                         <div style={{ padding: '1rem', marginBottom: '1rem', borderRadius: '8px', background: message.type === 'success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)', color: message.type === 'success' ? '#10b981' : '#ef4444' }}>
                             {message.text}
                         </div>
                     )}
 
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{ width: '100%', marginTop: '1rem' }}
+                        disabled={loading || (Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc)}
+                    >
                         {loading ? 'Salvando...' : 'Salvar Cotação'}
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                     </button>
@@ -175,49 +205,59 @@ export default function PricingForm() {
             <div className="glass-panel animate-fade-in" style={{ position: 'sticky', top: '100px', height: 'fit-content' }}>
                 <h2>Resumo da Precificação</h2>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-                        <span>Valor de Tabela:</span>
-                        <span>{formatCurrency(form.valor_tabela || 0)}</span>
+                        <span>Valor de Tabela Base (+ Frete se CIF):</span>
+                        <span>{formatCurrency((Number(form.valor_tabela) || 0) + (form.frete_tipo === 'CIF' ? Number(form.valor_frete || 0) : 0))}</span>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-                        <span>Valor Unitário da Margem:</span>
-                        <span>{formatCurrency(metrics.valor_margem)}</span>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-                        <span>Valor da Comissão (Unitário):</span>
+                        <span>Comissão Adicionada:</span>
                         <span>{formatCurrency(metrics.valor_comissao)}</span>
                     </div>
 
-                    {form.frete_tipo === 'CIF' && (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-                            <span>Valor do Frete (Adicionado):</span>
-                            <span>{formatCurrency(form.valor_frete || 0)}</span>
-                        </div>
-                    )}
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
-                        <span style={{ fontWeight: 600 }}>Base de Cálculo:</span>
-                        <span style={{ fontWeight: 600 }}>{formatCurrency(metrics.base_calculo)}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.8rem' }}>
+                        <span>Subtotal Com Comissão:</span>
+                        <span>{formatCurrency(metrics.valor_com_comissao)}</span>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-                        <span>Aliquota DIFAL ({form.estado_destino}):</span>
-                        <span>{formatPercent(metrics.percentual_difal)}</span>
+                        <span>Margem Adicionada:</span>
+                        <span>{formatCurrency(metrics.valor_margem)}</span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#ef4444' }}>
-                        <span>Valor do Imposto (DIFAL):</span>
-                        <span>{formatCurrency(metrics.valor_difal)}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '0.8rem' }}>
+                        <span>Subtotal Com Margem:</span>
+                        <span>{formatCurrency(metrics.valor_com_margem)}</span>
                     </div>
 
-                    <div className="result-card">
-                        <div style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 600 }}>Valor Unitário de Venda</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
+                        <span>Imposto DIFAL ({form.estado_destino} - {formatPercent(metrics.percentual_difal)}):</span>
+                        <span style={{ color: '#ef4444' }}>{formatCurrency(metrics.valor_difal)}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, paddingBottom: '0.8rem', paddingTop: '0.8rem', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', padding: '0.5rem' }}>
+                        <span>VALOR CHEIO DE VENDA (Máximo):</span>
+                        <span style={{ color: '#10b981' }}>{formatCurrency(metrics.valor_venda_cheio)}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', marginTop: '1rem' }}>
+                        <span>Menor Venda (Sem Margem):</span>
+                        <span>{formatCurrency(metrics.valor_minimo_venda)}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
+                        <span>Desconto Máximo Permitido:</span>
+                        <span style={{ fontWeight: 600, color: '#f59e0b' }}>{formatPercent(metrics.desconto_maximo_perc)}</span>
+                    </div>
+
+                    <div className="result-card" style={{ marginTop: '1rem', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                        <div style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 600, display: 'flex', justifyContent: 'space-between' }}>
+                            <span>Valor Final Un. (Com Desconto)</span>
+                        </div>
                         <div className="result-value">{formatCurrency(metrics.venda_unitario)}</div>
 
-                        <div style={{ color: 'var(--text-secondary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Valor Total (x{form.quantidade})</div>
+                        <div style={{ color: 'var(--text-secondary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Valor Final Total (x{form.quantidade})</div>
                         <div className="result-value" style={{ fontSize: '1.5rem', color: 'var(--text-primary)' }}>
                             {formatCurrency(metrics.venda_total)}
                         </div>
