@@ -22,14 +22,9 @@ const initialForm = {
 
 export default function PricingForm() {
     const [form, setForm] = useState(initialForm);
-    const [metrics, setMetrics] = useState(calculatePricing(initialForm));
+    const metrics = calculatePricing(form);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
-
-    useEffect(() => {
-        // Reative update whenever form changes
-        setMetrics(calculatePricing(form));
-    }, [form]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
