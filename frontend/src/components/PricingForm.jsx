@@ -18,14 +18,26 @@ const initialForm = {
     frete_tipo: 'FOB',
     valor_frete: '',
     estado_destino: 'SP',
-    desconto_concedido_perc: ''
+    desconto_concedido_perc: '',
+    observacoes: ''
 };
 
-export default function PricingForm() {
+export default function PricingForm({ initialData }) {
     const [form, setForm] = useState(initialForm);
     const metrics = calculatePricing(form);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
+
+    useEffect(() => {
+        if (initialData) {
+            setForm({
+                ...initialForm,
+                ...initialData,
+                data_precificacao: initialData.data_precificacao || getLocalDateString(),
+            });
+            setMessage({ type: 'success', text: 'Cotação carregada com sucesso! Você pode editá-la e re-salvar.' });
+        }
+    }, [initialData]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -108,17 +120,17 @@ export default function PricingForm() {
 
                     <div className="input-group">
                         <label>Quantidade *</label>
-                        <input type="number" name="quantidade" min="1" value={form.quantidade} onChange={handleChange} required />
+                        <input type="number" name="quantidade" min="1" value={form.quantidade} onChange={handleChange} onWheel={(e) => e.target.blur()} required />
                     </div>
 
                     <div className="input-group">
                         <label>Valor de Tabela (R$) *</label>
-                        <input type="number" step="0.01" name="valor_tabela" value={form.valor_tabela} onChange={handleChange} required placeholder="Ex: Informe o valor unitário base" />
+                        <input type="number" step="0.01" name="valor_tabela" value={form.valor_tabela} onChange={handleChange} onWheel={(e) => e.target.blur()} required placeholder="Ex: Informe o valor unitário base" />
                     </div>
 
                     <div className="input-group">
                         <label>Margem para Negociação (%) *</label>
-                        <input type="number" step="0.1" name="margem_negociacao_perc" value={form.margem_negociacao_perc} onChange={handleChange} required placeholder="Ex: Informe o percentual de margem desejada" />
+                        <input type="number" step="0.1" name="margem_negociacao_perc" value={form.margem_negociacao_perc} onChange={handleChange} onWheel={(e) => e.target.blur()} required placeholder="Ex: Informe o percentual de margem desejada" />
                     </div>
 
                     <div className="input-group" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -132,7 +144,7 @@ export default function PricingForm() {
                     {form.comissao_representante && (
                         <div className="input-group animate-fade-in">
                             <label>Percentual de Comissão (%) *</label>
-                            <input type="number" step="0.1" name="percentual_comissao" value={form.percentual_comissao} onChange={handleChange} required placeholder="Ex: Informe o percentual de comissão" />
+                            <input type="number" step="0.1" name="percentual_comissao" value={form.percentual_comissao} onChange={handleChange} onWheel={(e) => e.target.blur()} required placeholder="Ex: Informe o percentual de comissão" />
                         </div>
                     )}
 
@@ -147,7 +159,7 @@ export default function PricingForm() {
                     {form.frete_tipo === 'CIF' && (
                         <div className="input-group animate-fade-in">
                             <label>Valor do Frete (R$) *</label>
-                            <input type="number" step="0.01" name="valor_frete" value={form.valor_frete} onChange={handleChange} required placeholder="Ex: Valor total do frete" />
+                            <input type="number" step="0.01" name="valor_frete" value={form.valor_frete} onChange={handleChange} onWheel={(e) => e.target.blur()} required placeholder="Ex: Valor total do frete" />
                         </div>
                     )}
 
@@ -161,7 +173,6 @@ export default function PricingForm() {
                     </div>
 
                     <div className="input-group" style={{
-                        borderTop: '1px solid rgba(255,255,255,0.1)',
                         paddingTop: '1rem',
                         marginTop: '1rem'
                     }}>
@@ -172,16 +183,35 @@ export default function PricingForm() {
                             name="desconto_concedido_perc"
                             value={form.desconto_concedido_perc}
                             onChange={handleChange}
+                            onWheel={(e) => e.target.blur()}
                             placeholder="Ex: 5"
-                            style={{
-                                borderColor: Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc ? '#ef4444' : 'inherit'
-                            }}
+                            style={Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc ? { borderColor: '#ef4444' } : {}}
                         />
                         {Number(form.desconto_concedido_perc) > metrics.desconto_maximo_perc && (
                             <span style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '0.5rem', display: 'block' }}>
                                 O desconto solicitado ({form.desconto_concedido_perc}%) excede o máximo permitido ({formatPercent(metrics.desconto_maximo_perc)}).
                             </span>
                         )}
+                    </div>
+
+                    <div className="input-group" style={{
+                        borderTop: '1px solid rgba(255,255,255,0.1)',
+                        paddingTop: '1rem',
+                        marginTop: '1rem'
+                    }}>
+                        <label>Observação (Opcional - Máx 220 caracteres)</label>
+                        <textarea
+                            name="observacoes"
+                            value={form.observacoes || ''}
+                            onChange={handleChange}
+                            maxLength="220"
+                            placeholder="Ex: Condição especial acordada via WhatsApp..."
+                            rows="3"
+                            style={{ resize: 'vertical' }}
+                        ></textarea>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textAlign: 'right', display: 'block', marginTop: '0.2rem' }}>
+                            {(form.observacoes || '').length}/220
+                        </span>
                     </div>
 
                     {message && (

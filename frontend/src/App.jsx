@@ -7,6 +7,7 @@ import Auth from './components/Auth';
 function App() {
     const [view, setView] = useState('pricing');
     const [session, setSession] = useState(null); // { token, user: { is_admin } }
+    const [quoteToEdit, setQuoteToEdit] = useState(null);
 
     const handleLogin = (token) => {
         fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
@@ -44,7 +45,7 @@ function App() {
                     <button
                         className="btn btn-secondary"
                         style={{ borderColor: view === 'pricing' ? 'var(--accent)' : 'var(--surface-border)' }}
-                        onClick={() => setView('pricing')}
+                        onClick={() => { setQuoteToEdit(null); setView('pricing'); }}
                     >
                         Nova Cotação
                     </button>
@@ -74,8 +75,8 @@ function App() {
                 </div>
             </nav>
 
-            {view === 'pricing' && <PricingForm />}
-            {view === 'history' && <HistoryDashboard isAdmin={session.user.is_admin} />}
+            {view === 'pricing' && <PricingForm initialData={quoteToEdit} />}
+            {view === 'history' && <HistoryDashboard isAdmin={session.user.is_admin} onLoadQuote={(quote) => { setQuoteToEdit(quote); setView('pricing'); }} />}
             {view === 'admin' && session.user.is_admin && <AdminDashboard token={session.token} />}
         </div>
     );

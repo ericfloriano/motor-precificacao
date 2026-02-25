@@ -18,10 +18,12 @@ def export_to_excel(history_data: dict) -> BytesIO:
     return output
 
 def format_currency(value):
-    return f"R$ {value:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    val = value or 0.0
+    return f"R$ {val:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 def format_percent(value):
-    return f"{value:.2f}%".replace(".", ",")
+    val = value or 0.0
+    return f"{val:.2f}%".replace(".", ",")
 
 def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO:
     buffer = BytesIO()
@@ -124,6 +126,12 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
     table.setStyle(table_style)
     elements.append(table)
     
+    observacoes = history_data.get('observacoes')
+    if observacoes:
+        obs_title_style = ParagraphStyle('ObsTitle', parent=styles['Heading3'], fontName="Helvetica-Bold", spaceBefore=20, spaceAfter=5)
+        elements.append(Paragraph("Observações Adicionais:", obs_title_style))
+        elements.append(Paragraph(str(observacoes), styles['Normal']))
+
     doc.build(elements)
     buffer.seek(0)
     return buffer

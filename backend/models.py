@@ -51,10 +51,10 @@ class PricingHistory(Base):
     venda_unitario = Column(Float)
     venda_total = Column(Float)
     
-    # Novas regras (Trava & Desconto)
     valor_venda_cheio = Column(Float)
     valor_minimo_venda = Column(Float)
     desconto_concedido_perc = Column(Float, default=0.0)
     valor_com_desconto = Column(Float)
+    observacoes = Column(String(220))
 
     owner = relationship("User", back_populates="pricings")
