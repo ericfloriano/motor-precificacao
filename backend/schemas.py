@@ -43,6 +43,7 @@ class PricingInput(BaseModel):
     estado_destino: str
     desconto_concedido_perc: float
     observacoes: Optional[str] = None
+    protocolo_base: Optional[str] = None
 
 class PricingHistoryOut(PricingInput):
     id: int

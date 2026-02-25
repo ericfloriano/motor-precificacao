@@ -63,6 +63,9 @@ export default function PricingForm({ initialData }) {
             // Setup backend integration here
             const token = localStorage.getItem('token');
             const payload = { ...form };
+            if (payload.protocolo) {
+                payload.protocolo_base = payload.protocolo;
+            }
 
             // Ensure precise floats before submitting
             const numberFields = ['valor_tabela', 'margem_negociacao_perc', 'percentual_comissao', 'valor_frete', 'desconto_concedido_perc'];
@@ -86,6 +89,9 @@ export default function PricingForm({ initialData }) {
             if (!res.ok) throw new Error("Erro na API");
             const data = await res.json();
             setMessage({ type: 'success', text: `Cotação salva com sucesso! Protocolo: ${data.data.protocolo}` });
+
+            // Update form state with the new generated protocol so subsequent saves generate REV.2 etc
+            setForm(prev => ({ ...prev, protocolo: data.data.protocolo }));
 
             // Note: intentionally not clearing the form to allow easy re-quotes 
             // but the success message shows the saved protocol

@@ -98,11 +98,13 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         ["Valor Total Final", format_currency(history_data.get('venda_total') or 0.0)]
     ]
     
+    print("LEN DATA INSIDE:", len(data))
     col_widths = [doc.width * 0.45, doc.width * 0.55]
+    print("LEN DATA INSIDE:", len(data))
     table = Table(data, colWidths=col_widths)
     
     table_style = TableStyle([
-        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e5e7eb')), # Light Gray column 1
+
         ('TEXTCOLOR', (0, 0), (-1, -1), colors.HexColor('#1f2937')),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'), # Bold col 1
@@ -112,15 +114,15 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         ('TOPPADDING', (0, 0), (-1, -1), 10),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         # Highlight Results
-        ('BACKGROUND', (0, -4), (-1, -1), colors.HexColor('#f1f5f9')), 
-        ('BACKGROUND', (0, -2), (-1, -2), colors.HexColor('#e0f2fe')), # Unitario
-        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#dbeafe')), # Total
+
+
+
         ('FONTNAME', (1, -4), (1, -1), 'Helvetica-Bold'), # Bold results values
         # Remove border on blank row
-        ('LINEBELOW', (0, 10), (1, 10), 0, colors.white),
-        ('LINEABOVE', (0, 10), (1, 10), 0, colors.white),
-        ('GRID', (0, 10), (-1, 10), 0, colors.white),
-        ('BACKGROUND', (0, 10), (-1, 10), colors.white),
+        ('LINEBELOW', (0, 16), (1, 16), 0, colors.white),
+        ('LINEABOVE', (0, 16), (1, 16), 0, colors.white),
+        ('GRID', (0, 16), (-1, 16), 0, colors.white),
+
     ])
     
     table.setStyle(table_style)
