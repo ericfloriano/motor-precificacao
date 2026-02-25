@@ -15,11 +15,12 @@ O projeto foi dividido em duas áreas distintas para maximizar a escalabilidade,
 ## ✨ Principais Funcionalidades
 
 - **Reatividade Zero-Lag**: Os cálculos matemáticos são pré-validados e formatados visualmente diretamente pelo frontend a cada tecla digitada. Apenas no salvamento ocorre o tráfego HTTP para o Backend, garantindo máxima velocidade na operação comercial.
-- **Protocolamento Automático**: Toda cotação ganha um UUID/Protocolo numérico sequencial instantâneo no formato corporativo rastreável.
+- **Protocolamento Automático e Revisões**: Toda cotação ganha um UUID/Protocolo numérico sequencial instantâneo no formato corporativo rastreável. Ao reabrir cotações através do Histórico, o backend gerencia revisões automáticas no formato `-REV.1`, `-REV.2`.
 - **Tabela Dinâmica DIFAL**: Lookup customizado por estado configurado e embutido no motor base.
 - **Segurança e Hierarquia (ACL)**: Módulo de gestão de permissões contendo Login Automático, restrição de domínios (apenas e-mails autorizados da empresa), controle Anti-Spam via Código de Convite Privado e visibilidade global com poderes de Exclusão de Histórico exclusivo para Administradores.
-- **Exportação Formatada**: Relatórios em `.xlsx` e `.pdf` corporativos e super estéticos (usando ReportLab e Pandas) formatados para envio direto ou upload em CRMs, contendo dados do protocolo, da emissão e de quem a gerou.
-- **UI Responsiva e Premium**: Visual *Dark Mode* que inspira confiança corporativa, com micro-animações, botões texturizados com glassmorphism, *gradient fonts*, e *Night Shadows*.
+- **Matemática de Vendas**: Lógica de precificação robusta em múltiplas camadas (Markup Linear, Subtotais Base, Valor Mínimo de Margem Operacional e Teto de Descontos Concedidos - Máx. Permitido).
+- **Exportação Formatada**: Relatórios em `.xlsx` e `.pdf` corporativos formatados para envio direto ou upload em CRMs, contendo dados do protocolo, cálculos precisos de impostos, e com botões de interface integrados à visualização do histórico.
+- **UI Responsiva e Premium**: Visual *Dark Mode* corporativo, com micro-animações, campos transparentes com efeito de vidro (Glassmorphism), e botões texturizados *Dark Glow* interativos.
 
 ## 🚀 Como Executar Localmente
 
