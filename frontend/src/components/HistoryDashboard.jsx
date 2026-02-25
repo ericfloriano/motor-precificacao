@@ -90,13 +90,13 @@ export default function HistoryDashboard({ isAdmin, onLoadQuote }) {
                                         <td style={{ padding: '1rem' }}>{item.nome_equipamento} (x{item.quantidade})</td>
                                         <td style={{ padding: '1rem', color: 'var(--success)', fontWeight: 600 }}>{formatCurrency(item.venda_total)}</td>
                                         <td style={{ padding: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                                            <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', backgroundColor: 'var(--primary)', borderColor: 'var(--primary)' }} onClick={() => handleExport(item.id, 'pdf')}>
+                                            <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleExport(item.id, 'pdf')}>
                                                 PDF
                                             </button>
-                                            <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', backgroundColor: 'var(--success)', borderColor: 'var(--success)' }} onClick={() => handleExport(item.id, 'excel')}>
+                                            <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => handleExport(item.id, 'excel')}>
                                                 XLSX
                                             </button>
-                                            <button className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => onLoadQuote(item)}>
+                                            <button className="btn btn-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => onLoadQuote(item)}>
                                                 Abrir
                                             </button>
                                             {isAdmin && (

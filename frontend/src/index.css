@@ -10,12 +10,12 @@
   --accent-glow: rgba(59, 130, 246, 0.5);
   --success: #10b981;
   --error: #ef4444;
-  
+
   --font-main: 'Outfit', sans-serif;
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
-  
+
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --blur-glass: blur(12px);
   --transition-fast: 0.2s ease;
@@ -56,7 +56,9 @@ body {
 }
 
 /* Typography */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-weight: 600;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
@@ -94,7 +96,9 @@ label {
   letter-spacing: 0.05em;
 }
 
-input, select {
+input,
+select,
+textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   background: rgba(15, 23, 42, 0.6);
@@ -107,7 +111,9 @@ input, select {
   outline: none;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus,
+textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-glow);
   background: rgba(15, 23, 42, 0.8);
@@ -120,19 +126,25 @@ input:focus, select:focus {
   width: 50px;
   height: 26px;
 }
+
 .toggle-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
+
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(255,255,255,0.1);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
   transition: .4s;
   border-radius: 34px;
 }
+
 .slider:before {
   position: absolute;
   content: "";
@@ -144,10 +156,12 @@ input:focus, select:focus {
   transition: .4s;
   border-radius: 50%;
 }
-input:checked + .slider {
+
+input:checked+.slider {
   background-color: var(--accent);
 }
-input:checked + .slider:before {
+
+input:checked+.slider:before {
   transform: translateX(24px);
   background-color: white;
 }
@@ -218,8 +232,15 @@ input:checked + .slider:before {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -228,7 +249,7 @@ input:checked + .slider:before {
 
 /* Result Dashboard Highlights */
 .result-card {
-  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(16,185,129,0.05));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
   border: 1px solid var(--accent-glow);
   padding: 1.5rem;
   border-radius: var(--radius-md);
