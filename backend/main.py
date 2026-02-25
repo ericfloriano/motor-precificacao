@@ -106,21 +106,38 @@ def calculate_pricing(
     current_user: models.User = Depends(auth.get_current_user)
 ):
     import random
-    import string
     
     resultado = calculos.precificar(payload.model_dump())
     
     now_brt = models.get_local_time()
-    random_str = ''.join(random.choices(string.digits, k=6))
-    new_protocolo = f"{now_brt.strftime('%d%m%Y')}-{random_str}"
+    
+    payload_dump = payload.model_dump()
+    base_protocol = payload_dump.pop('protocolo_base', None)
+    
+    if base_protocol:
+        if "-REV." in base_protocol:
+            parts = base_protocol.split("-REV.")
+            try:
+                rev_num = int(parts[1]) + 1
+                new_protocolo = f"{parts[0]}-REV.{rev_num}"
+            except ValueError:
+                new_protocolo = f"{base_protocol}-REV.1"
+        else:
+            new_protocolo = f"{base_protocol}-REV.1"
+    else:
+        import string
+        random_str = ''.join(random.choices(string.digits, k=6))
+        new_protocolo = f"{now_brt.strftime('%d%m%Y')}-{random_str}"
+        
+    resultado_db = {k: v for k, v in resultado.items() if hasattr(models.PricingHistory, k)}
     
     # Save to history
     history_entry = models.PricingHistory(
         protocolo=new_protocolo,
         owner_id=current_user.id,
         created_at=now_brt,
-        **payload.model_dump(),
-        **resultado
+        **payload_dump,
+        **resultado_db
     )
     db.add(history_entry)
     db.commit()
