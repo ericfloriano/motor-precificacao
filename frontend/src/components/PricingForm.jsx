@@ -86,6 +86,10 @@ export default function PricingForm({ initialData }) {
                 },
                 body: JSON.stringify(payload)
             });
+            if (res.status === 401) {
+                setMessage({ type: 'error', text: 'Sessão expirada. Por favor, saia e entre novamente.' });
+                return;
+            }
             if (!res.ok) throw new Error("Erro na API");
             const data = await res.json();
             setMessage({ type: 'success', text: `Cotação salva com sucesso! Protocolo: ${data.data.protocolo}` });

@@ -13,6 +13,10 @@ export default function HistoryDashboard({ isAdmin, onLoadQuote }) {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/history`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            if (res.status === 401) {
+                setError("Sessão expirada. Refaça o login.");
+                return;
+            }
             if (!res.ok) throw new Error("Erro ao buscar histórico");
             const data = await res.json();
             setHistory(data);
