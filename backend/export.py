@@ -141,6 +141,26 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         alignment=2
     )
     
+    # Red Warning style for Minimum Allowed Price
+    style_table_text_warning = ParagraphStyle(
+        'TableTextWarning',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=9,
+        textColor=colors.HexColor('#B91C1C'),
+        leading=11
+    )
+    
+    style_table_text_warning_right = ParagraphStyle(
+        'TableTextWarningRight',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=9,
+        textColor=colors.HexColor('#B91C1C'),
+        leading=11,
+        alignment=2
+    )
+    
     style_obs_title = ParagraphStyle(
         'ObsTitle',
         parent=styles['Normal'],
@@ -206,7 +226,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         [Paragraph(str(history_data.get('protocolo', 'N/A')), style_val_highlight)],
         [Paragraph("DATA DA PRECIPICAÇÃO", style_label)],
         [Paragraph(data_prec_str, style_val)],
-        [Paragraph("CONSULTOR RESPONSÁVEL", style_label)],
+        [Paragraph("RESPONSÁVEL", style_label)],
         [Paragraph(str(author_name), style_val)]
     ]
     
@@ -269,8 +289,16 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
     # DIFAL Formatting
     difal_str = f"{history_data.get('estado_destino', 'MG')} - {format_percent(history_data.get('percentual_difal') or 0.0)} ({format_currency(history_data.get('valor_difal') or 0.0)})"
     
+    # Calculations
+    venda_cheio = history_data.get('valor_venda_cheio') or 0.0
+    minimo_venda = history_data.get('valor_minimo_venda') or 0.0
+    if venda_cheio > 0:
+        desconto_maximo_perc = ((venda_cheio - minimo_venda) / venda_cheio) * 100.0
+    else:
+        desconto_maximo_perc = 0.0
+
     # Desconto Formatting
-    desconto_val = (history_data.get('valor_venda_cheio') or 0.0) * ((history_data.get('desconto_concedido_perc') or 0.0) / 100.0)
+    desconto_val = venda_cheio * ((history_data.get('desconto_concedido_perc') or 0.0) / 100.0)
     desconto_str = f"{format_percent(history_data.get('desconto_concedido_perc') or 0.0)} (- {format_currency(desconto_val)})"
 
     pricing_table_data = [
@@ -282,8 +310,14 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         [Paragraph("Margem de Negociação Adicional", style_table_text), Paragraph(margem_str, style_table_text_right)],
         [Paragraph("Subtotal com Margem (Base DIFAL)", style_table_text), Paragraph(format_currency(history_data.get('valor_com_margem') or 0.0), style_table_text_right)],
         [Paragraph("Imposto DIFAL de Destino", style_table_text), Paragraph(difal_str, style_table_text_right)],
-        [Paragraph("Valor Cheio da Venda (Preço Máximo)", style_table_text), Paragraph(format_currency(history_data.get('valor_venda_cheio') or 0.0), style_table_text_right)],
-        [Paragraph("Valor de Reserva (Mínimo Permitido)", style_table_text), Paragraph(format_currency(history_data.get('valor_minimo_venda') or 0.0), style_table_text_right)],
+        [Paragraph("Valor Cheio da Venda (Preço Máximo)", style_table_text), Paragraph(format_currency(venda_cheio), style_table_text_right)],
+        
+        # Highlighted row (index 9)
+        [Paragraph("Valor de Reserva (Mínimo Permitido)", style_table_text_warning), Paragraph(format_currency(minimo_venda), style_table_text_warning_right)],
+        
+        # New discount cap percent row (index 10)
+        [Paragraph("Desconto Máximo Permitido", style_table_text_bold), Paragraph(format_percent(desconto_maximo_perc), style_table_text_right)],
+        
         [Paragraph("Desconto Concedido", style_table_text), Paragraph(desconto_str, style_table_text_right)],
     ]
     
@@ -292,18 +326,25 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         ('BACKGROUND', (0, 0), (-1, 0), c_teal),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 4),
         ('TOPPADDING', (0, 0), (-1, 0), 4),
-        ('BOTTOMPADDING', (0, 1), (-1, -1), 3),
-        ('TOPPADDING', (0, 1), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 2.5),
+        ('TOPPADDING', (0, 1), (-1, -1), 2.5),
         ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor('#F8FAFC')),
         ('BACKGROUND', (0, 3), (-1, 3), colors.HexColor('#F8FAFC')),
         ('BACKGROUND', (0, 5), (-1, 5), colors.HexColor('#F8FAFC')),
         ('BACKGROUND', (0, 7), (-1, 7), colors.HexColor('#F8FAFC')),
-        ('BACKGROUND', (0, 9), (-1, 9), colors.HexColor('#F8FAFC')),
+        
+        # Soft red warning background for Valor de Reserva
+        ('BACKGROUND', (0, 9), (-1, 9), colors.HexColor('#FEF2F2')),
+        ('BOX', (0, 9), (-1, 9), 0.5, colors.HexColor('#FCA5A5')),
+        
+        # Zebra highlight for Desconto Máximo row
+        ('BACKGROUND', (0, 10), (-1, 10), colors.HexColor('#F8FAFC')),
+        
         ('LINEBELOW', (0, 0), (-1, -1), 0.3, colors.HexColor('#E2E8F0')),
     ]))
     
     right_flowables.append(pricing_table)
-    right_flowables.append(Spacer(1, 10))
+    right_flowables.append(Spacer(1, 8))
     
     # Highlighted Totals Card
     totals_data = [
@@ -342,7 +383,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
     ]))
     
     elements.append(parent_table)
-    elements.append(Spacer(1, 15))
+    elements.append(Spacer(1, 10))
     
     # Legal Footer / Timestamp
     gerado_em = models.get_local_time().strftime("%d/%m/%Y %H:%M:%S")
