@@ -224,7 +224,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
         [Paragraph(f"{history_data.get('nome_equipamento', 'N/A')} (x{history_data.get('quantidade', 1)})", style_val)],
         [Paragraph("PROTOCOLO COMERCIAL", style_label)],
         [Paragraph(str(history_data.get('protocolo', 'N/A')), style_val_highlight)],
-        [Paragraph("DATA DA PRECIPICAÇÃO", style_label)],
+        [Paragraph("DATA DA PRECIFICAÇÃO", style_label)],
         [Paragraph(data_prec_str, style_val)],
         [Paragraph("RESPONSÁVEL", style_label)],
         [Paragraph(str(author_name), style_val)]
@@ -269,7 +269,7 @@ def export_to_pdf(history_data: dict, author_name: str = "Consultor") -> BytesIO
     # ==========================================
     right_flowables = []
     
-    right_flowables.append(Paragraph("DEMONSTRATIVO DE PRECIPICAÇÃO", style_title))
+    right_flowables.append(Paragraph("DEMONSTRATIVO DE PRECIFICAÇÃO", style_title))
     
     # Frete Formatting
     if history_data.get('frete_tipo') == 'CIF':
